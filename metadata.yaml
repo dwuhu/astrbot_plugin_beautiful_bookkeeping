@@ -2,9 +2,10 @@ name: astrbot_plugin_beautiful_bookkeeping
 display_name: 精美记账
 desc: 多平台精美记账插件（含 AI 技能中心 / 账单截图导入）：手动记账 / 退款抵扣 / 月度预算梯度提醒 / 存钱目标与购买力测算 / 每日报账简报+天气 / 上月对比 AI 复盘 / 液态玻璃图片卡片 / 框架内嵌记账本页面
 version: v1.0.0
-author: 豆包
+author: 九月月
 repo: https://github.com/dwuhu/astrbot_plugin_beautiful_bookkeeping
 astrbot_version: ">=4.0.0"
+
 
 
 

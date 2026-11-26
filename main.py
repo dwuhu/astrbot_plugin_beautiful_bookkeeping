@@ -73,7 +73,7 @@ def _llm_tool(name: str):
     return lambda fn: fn
 
 
-@register("astrbot_plugin_beautiful_bookkeeping", "豆包", "多平台精美记账：预算提醒／每日简报／每日扣款／AI复盘／液态玻璃卡片", "1.0.0")
+@register("astrbot_plugin_beautiful_bookkeeping", "九月月", "多平台精美记账：预算提醒／每日简报／每日扣款／AI复盘／液态玻璃卡片", "1.0.0")
 class BeautifulBookkeeping(Star):
     def __init__(self, context: Context, config: Any = None):
         super().__init__(context)
@@ -1923,5 +1923,6 @@ class BeautifulBookkeeping(Star):
         except Exception:
             pass
         logger.info("[记账] 插件已卸载")
+
 
 

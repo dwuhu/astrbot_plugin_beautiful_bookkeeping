@@ -6,7 +6,7 @@
 
 多平台精美记账插件：**QQ / 个人微信 / 公众号 / 企业微信** 一套代码，液态玻璃图片卡片 + **AstrBot 面板内嵌记账页面**。
 
-仓库：<https://github.com/dwuhu/astrbot_plugin_beautiful_bookkeeping>
+仓库：<https://github.com/dwuhu/astrbot_plugin_beautiful_bookkeeping> · 作者：**九月月**
 
 
 > 核心原则：**所有账目只能由用户手动录入**，机器人不会、也不能自动抓取任何支付账单；**数字全部由程序算，AI 只负责解读和建议**，永远不改数据。
