@@ -4,6 +4,8 @@ import asyncio
 import json
 import os
 import re
+import shutil
+import tempfile
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -39,6 +41,56 @@ except ImportError:  # 兼容以文件方式加载
     from core.viewapi import ViewAPI
 
 PLUGIN_NAME = "astrbot_plugin_beautiful_bookkeeping"
+
+
+def _resolve_data_dir() -> str:
+    """持久化数据统一写到 AstrBot 的 data/plugin_data/<插件名>，不写插件自身目录。
+
+    优先级：框架提供的 data 目录 -> ASTRBOT_ROOT -> 从插件路径推断 -> 系统临时目录（仅本地调试）。
+    """
+    base = None
+    try:
+        from astrbot.core.utils.astrbot_path import get_astrbot_data_path
+
+        base = str(get_astrbot_data_path())
+    except Exception:
+        base = None
+    if not base:
+        try:
+            from astrbot.core.utils.astrbot_path import get_astrbot_path
+
+            base = os.path.join(str(get_astrbot_path()), "data")
+        except Exception:
+            base = None
+    if not base and os.environ.get("ASTRBOT_ROOT"):
+        base = os.path.join(os.environ["ASTRBOT_ROOT"], "data")
+    if not base:
+        plugin_dir = os.path.dirname(os.path.abspath(__file__))
+        guess = os.path.dirname(os.path.dirname(plugin_dir))
+        if os.path.basename(guess) == "data":  # <AstrBot>/data/plugins/<插件>
+            base = guess
+    if not base:  # 脱离框架的本地调试，不污染插件目录
+        base = os.path.join(tempfile.gettempdir(), "astrbot")
+    return os.path.join(base, "plugin_data", PLUGIN_NAME)
+
+
+def _migrate_legacy_data(data_dir: str) -> None:
+    """老版本把库放在 <插件目录>/data，升级后自动搬到新位置，避免丢账"""
+    legacy = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
+    src = os.path.join(legacy, "bookkeeping.db")
+    dst = os.path.join(data_dir, "bookkeeping.db")
+    if not os.path.isfile(src) or os.path.exists(dst):
+        return
+    try:
+        os.makedirs(data_dir, exist_ok=True)
+        for suffix in ("", "-wal", "-shm"):
+            s = src + suffix
+            if os.path.isfile(s):
+                shutil.copy2(s, dst + suffix)
+        logger.info("[记账] 已把旧数据迁移到 %s", data_dir)
+    except Exception as e:  # noqa: BLE001
+        logger.warning("[记账] 旧数据迁移失败（不影响新库使用）: %s", e)
+
 
 NUM_RE = re.compile(r"^\d+(\.\d{1,2})?$")
 DATE_RE = re.compile(r"^(\d{4}-\d{2}-\d{2})$")
@@ -79,8 +131,9 @@ class BeautifulBookkeeping(Star):
         super().__init__(context)
         self.context = context
         self.cfg = self._normalize_config(config)
-        data_dir = os.path.join(os.path.dirname(__file__), "data")
+        data_dir = _resolve_data_dir()
         os.makedirs(data_dir, exist_ok=True)
+        _migrate_legacy_data(data_dir)
 
         self.db = BookDB(os.path.join(data_dir, "bookkeeping.db"),
                          self.cfg.get("default_categories") or DEFAULT_EXPENSE,

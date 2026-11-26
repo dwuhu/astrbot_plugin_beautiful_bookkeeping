@@ -118,8 +118,10 @@ astrbot_plugin_beautiful_bookkeeping/
 ├── .astrbot-plugin/i18n/    # 页面标题 / 描述的多语言文案
 │   └── zh-CN.json
 ├── dev/                     # 开发自测（不参与运行，可删）
-└── data/                    # 运行时自动生成：bookkeeping.db + cards/
+└── docs/screenshots/        # README 用的示例截图（带「示例数据」水印）
 ```
+
+> 运行时数据**不写在插件目录里**：数据库与渲染出的卡片统一放在 AstrBot 的 `data/plugin_data/astrbot_plugin_beautiful_bookkeeping/`（`bookkeeping.db` + `cards/`），符合插件审核对持久化位置的要求。升级自 `v1.8` 以前的版本时，旧 `data/bookkeeping.db` 会自动复制到新位置。
 
 ---
 
@@ -476,6 +478,8 @@ git push -u origin main
 2. GitHub 上新建 Release，tag 填 `v1.0.0`，标题 `精美记账 v1.0.0 · 首个开源版本`，正文直接复制 `RELEASE_NOTES.md`，附件上传打包好的 zip。
 
 打 tag 时如果插件里的版本号还要动，记得同步三处：`metadata.yaml` 的 `version`、`main.py` 里 `@register(...)` 的第 4 个参数、面板 `views/bookkeeping/app.js` 的 `SET_STATS`。
+
+
 
 
 
