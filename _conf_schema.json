@@ -1,0 +1,185 @@
+{
+  "enable_group": {
+    "description": "开启群聊记账",
+    "type": "bool",
+    "default": true
+  },
+  "enable_private": {
+    "description": "开启私聊记账",
+    "type": "bool",
+    "default": true
+  },
+  "default_output_mode": {
+    "description": "新用户默认输出模式",
+    "type": "string",
+    "default": "text",
+    "enum": [
+      "text",
+      "image"
+    ]
+  },
+  "allow_delete": {
+    "description": "允许删除账单",
+    "type": "bool",
+    "default": true
+  },
+  "require_confirm_delete": {
+    "description": "删除前需要二次确认",
+    "type": "bool",
+    "default": false
+  },
+  "allow_custom_date": {
+    "description": "允许手动指定账单日期（如 2026-11-20）",
+    "type": "bool",
+    "default": false
+  },
+  "skill_enable": {
+    "description": "允许 AI / 指令调用技能中心（只含普通用户权限）",
+    "type": "bool",
+    "default": true
+  },
+  "import_confirm": {
+    "description": "截图导入账单前需要回复「记账 确认」核对明细",
+    "type": "bool",
+    "default": true
+  },
+  "default_categories": {
+    "description": "默认支出分类",
+    "type": "list",
+    "default": [
+      "餐饮",
+      "交通",
+      "购物",
+      "房租",
+      "水电网",
+      "娱乐",
+      "医疗",
+      "日用品",
+      "人情",
+      "其他"
+    ]
+  },
+  "income_categories": {
+    "description": "默认收入分类",
+    "type": "list",
+    "default": [
+      "工资",
+      "兼职",
+      "红包",
+      "转账",
+      "补贴",
+      "其他收入"
+    ]
+  },
+  "page_size": {
+    "description": "每条消息/卡片展示的账单条数",
+    "type": "int",
+    "default": 8
+  },
+  "card_show_detail_count": {
+    "description": "图片卡片最多展示明细条数",
+    "type": "int",
+    "default": 8
+  },
+  "weather_enable": {
+    "description": "开启天气（无需 API Key，走公开天气源）",
+    "type": "bool",
+    "default": true
+  },
+  "weather_source": {
+    "description": "天气数据源：auto=优先 AI 搜索，失败自动降级公开源",
+    "type": "string",
+    "default": "auto",
+    "enum": [
+      "auto",
+      "wttr"
+    ]
+  },
+  "default_push_time": {
+    "description": "默认每日简报推送时间 HH:MM",
+    "type": "string",
+    "default": "21:00"
+  },
+  "push_when_no_record": {
+    "description": "当天没有任何账单也推送简报",
+    "type": "bool",
+    "default": false
+  },
+  "deduct_enable": {
+    "description": "允许每日扣款（每天 0 点静默自动记一笔固定支出）",
+    "type": "bool",
+    "default": true
+  },
+  "budget_alert_enable": {
+    "description": "预算主动提醒总开关（聊天里「记账 预算提醒 开/关」会覆盖此项）",
+    "type": "bool",
+    "default": true
+  },
+  "budget_alert_levels": {
+    "description": "预算提醒档位，逗号分隔的百分比，可随便几个（默认 70,90,100）",
+    "type": "string",
+    "default": "70,90,100"
+  },
+  "budget_alert_repeat": {
+    "description": "提醒频率：month=每档每月一次；once=每档只提醒一次；always=每次都提醒",
+    "type": "string",
+    "default": "month",
+    "enum": [
+      "month",
+      "once",
+      "always"
+    ]
+  },
+  "ai_skill_enable": {
+    "description": "开启 AI 技能（分析/自然语言记账/复盘）",
+    "type": "bool",
+    "default": true
+  },
+  "ai_nl_book_confirm": {
+    "description": "AI 自然语言记账需要二次确认",
+    "type": "bool",
+    "default": true
+  },
+  "ai_monthly_review_enable": {
+    "description": "本月卡片/后台展示上月对比 AI 复盘面板",
+    "type": "bool",
+    "default": true
+  },
+  "render": {
+    "description": "图片渲染参数",
+    "type": "object",
+    "items": {
+      "card_width": {
+        "description": "卡片宽度(px)",
+        "type": "int",
+        "default": 1080
+      },
+      "scale": {
+        "description": "渲染倍率(1~3)",
+        "type": "int",
+        "default": 2
+      },
+      "background": {
+        "description": "背景风格（anime = 二次元动漫夜景底图）",
+        "type": "string",
+        "default": "nebula",
+        "enum": [
+          "nebula",
+          "aurora",
+          "deep",
+          "anime"
+        ]
+      },
+      "enable_glow": {
+        "description": "开启霓虹光晕",
+        "type": "bool",
+        "default": true
+      }
+    }
+  },
+  "view_page_enable": {
+    "description": "在 AstrBot 面板中显示「记账本」页面（需要 AstrBot 4.24+）",
+    "type": "bool",
+    "default": true
+  }
+}

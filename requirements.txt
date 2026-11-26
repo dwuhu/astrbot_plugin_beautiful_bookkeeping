@@ -1,0 +1,4 @@
+# 图片卡片需要 jinja2 + playwright；面板页面用的是 AstrBot 自带 Web 框架，不需要 FastAPI
+jinja2>=3.1.0
+playwright>=1.40.0
+httpx>=0.27.0
