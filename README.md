@@ -1,4 +1,4 @@
-# 精美记账 · AstrBot 插件 v1.0.0
+# 精美记账 · AstrBot 插件 v1.0.1
 
 [![Release](https://img.shields.io/github/v/release/dwuhu/astrbot_plugin_beautiful_bookkeeping?label=release)](https://github.com/dwuhu/astrbot_plugin_beautiful_bookkeeping/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
@@ -11,7 +11,7 @@
 
 > 核心原则：**所有账目只能由用户手动录入**，机器人不会、也不能自动抓取任何支付账单；**数字全部由程序算，AI 只负责解读和建议**，永远不改数据。
 
-这是面向开源发布的**第一个版本 v1.0.0**：记账 / 查账 / 改删 / 预算与梯度提醒 / 存钱目标与购买力测算 / 每日简报 / 收支对比图 / 账单截图导入 / 每日扣款 / AI 技能中心 / 面板 8 页签，全部收在这一版里。逐条变更见 [`CHANGELOG.md`](./CHANGELOG.md)，GitHub Release 文案见 [`RELEASE_NOTES.md`](./RELEASE_NOTES.md)。
+这是面向开源发布的**首个正式版本**（当前 **v1.0.1**）：记账 / 查账 / 改删 / 预算与梯度提醒 / 存钱目标与购买力测算 / 每日简报 / 收支对比图 / 账单截图导入 / 每日扣款 / AI 技能中心 / 面板 8 页签，全部收在这一版里。v1.0.1 相对 v1.0.0 只修了数据持久化位置（按插件审核要求改到 `data/plugin_data/<插件名>`）。逐条变更见 [`CHANGELOG.md`](./CHANGELOG.md)，GitHub Release 文案见 [`RELEASE_NOTES.md`](./RELEASE_NOTES.md)。
 
 ---
 
@@ -458,26 +458,27 @@ AI 只在这三个数字之上补一句人话，不会改动结论。
 
 ---
 
-## 九、发布到 GitHub（首发 v1.0.0）
+## 九、发布与版本号
 
-仓库里除了插件本体，还带了发布用的三份东西：`CHANGELOG.md`（逐条变更）、`RELEASE_NOTES.md`（可直接粘贴成 GitHub Release 文案）、`LICENSE`（MIT）。`.gitignore` 已经排除了真实账本（`data/`、`*.db`）和预览截图。
+仓库：<https://github.com/dwuhu/astrbot_plugin_beautiful_bookkeeping>，发布材料三件套：`CHANGELOG.md`（逐条变更）、`RELEASE_NOTES.md`（可直接粘贴成 GitHub Release 文案）、`LICENSE`（MIT）。`.gitignore` 已排除真实账本（`*.db`）、预览目录与打包产物。
 
 ```bash
 # 在项目根目录（有 README.md / main.py 的那一层）
-git init
-git add .
-git commit -m "feat: 精美记账 v1.0.0 首个开源版本"
-git branch -M main
-git remote add origin git@github.com:<你的用户名>/astrbot_plugin_beautiful_bookkeeping.git
 git push -u origin main
+git push origin v1.0.1
 ```
 
-发完仓库后还有两个小地方要改：
+改版本号时同步这 5 处，别漏：
 
-1. `metadata.yaml` 里的 `repo:` 现在还是占位 `https://github.com/`，换成真实仓库地址（AstrBot 插件卡片会用它跳转）。
-2. GitHub 上新建 Release，tag 填 `v1.0.0`，标题 `精美记账 v1.0.0 · 首个开源版本`，正文直接复制 `RELEASE_NOTES.md`，附件上传打包好的 zip。
+| 位置 | 字段 |
+|---|---|
+| `metadata.yaml` | `version: v1.0.1` |
+| `main.py` | `@register(...)` 第 4 个参数 `"1.0.1"` |
+| `views/bookkeeping/app.js` | `SET_STATS` 里的 `["版本", "v1.0.1"]` |
+| `README.md` | 标题 `v1.0.1` |
+| `CHANGELOG.md` | 新增一节，并把 `RELEASE_NOTES.md` 标题一起改 |
 
-打 tag 时如果插件里的版本号还要动，记得同步三处：`metadata.yaml` 的 `version`、`main.py` 里 `@register(...)` 的第 4 个参数、面板 `views/bookkeeping/app.js` 的 `SET_STATS`。
+打包用 `python dev/pack_release.py`，会在项目根目录生成同名 zip 并复制到桌面；GitHub Release 的 tag 填 `v1.0.1`，正文复制 `RELEASE_NOTES.md`，附件上传这个 zip。
 
 
 
