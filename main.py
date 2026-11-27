@@ -21,6 +21,7 @@ try:  # AstrBot 以包方式加载 main.py
     from .core.render_image import CardRenderer, RenderUnavailable, donut_segments
     from .core.ai_skill import AISkill
     from .core import bill_import as BI
+    from .core import advisor as ADV
     from .core.skillhub import SkillHub
     from .core.weather import get_weather
     from .core.scheduler import PushScheduler
@@ -35,6 +36,7 @@ except ImportError:  # 兼容以文件方式加载
     from core.render_image import CardRenderer, RenderUnavailable, donut_segments
     from core.ai_skill import AISkill
     from core import bill_import as BI
+    from core import advisor as ADV
     from core.skillhub import SkillHub
     from core.weather import get_weather
     from core.scheduler import PushScheduler
@@ -125,7 +127,7 @@ def _llm_tool(name: str):
     return lambda fn: fn
 
 
-@register("astrbot_plugin_beautiful_bookkeeping", "九月月", "多平台精美记账：预算提醒／每日简报／每日扣款／AI复盘／液态玻璃卡片", "1.0.1")
+@register("astrbot_plugin_beautiful_bookkeeping", "九月月", "多平台精美记账：预算提醒／每日简报／每日扣款／AI复盘／省钱建议／液态玻璃卡片", "1.0.2")
 class BeautifulBookkeeping(Star):
     def __init__(self, context: Context, config: Any = None):
         super().__init__(context)
@@ -770,6 +772,12 @@ class BeautifulBookkeeping(Star):
             if head_cn == "取消":
                 self.db.clear_pending(platform, session_id, uid)
                 yield self._build_result(event, "已取消，这条没有记账～")
+                return
+
+            # ---------- 省钱建议（按上月支出算下月怎么省） ----------
+            if head_cn in ("省钱建议", "下月建议", "支出建议", "怎么省钱", "AI省钱建议"):
+                async for _res in self._cmd_saving(event, tokens, platform, session_id, uid, nick):
+                    yield _res
                 return
 
             # ---------- AI ----------
@@ -1737,7 +1745,42 @@ class BeautifulBookkeeping(Star):
         yield self._build_result(event, f"{preview}\n\n回复「记账 确认」入账，或「记账 取消」。")
 
     # ================= AI =================
+    # ================= 下月省钱建议 =================
+    async def _cmd_saving(self, event, tokens, platform, session_id, uid, nick):
+        """按上月真实支出算出可压缩分类 + 下月预算目标；AI 只负责把结论讲成人话"""
+        mode = self._parse_mode(tokens[1:]) or self._mode(platform, uid)
+        plan = ADV.build_plan(self.db, platform, session_id, uid)
+        if not plan.get("has_data"):
+            yield self._build_result(event, ADV.plan_text(plan))
+            return
+
+        text = ADV.plan_text(plan)
+        ai_text = ""
+        if self.cfg.get("ai_skill_enable", True):
+            try:
+                if await self.ai.available():
+                    ctx = self.ai.context_text(
+                        self.ai.build_context(self.db, platform, session_id, uid, nick))
+                    ai_text = await asyncio.wait_for(
+                        self.ai.saving_advice(plan, ctx), timeout=20)
+                    self.db.log_ai(platform, session_id, uid, "省钱建议", "saving")
+            except Exception as e:  # noqa: BLE001
+                logger.warning("[记账] 省钱建议 AI 失败，用本地文案: %s", e)
+                ai_text = ""
+
+        if ai_text:
+            text += f"\n\n🤖 {ai_text}"
+        image = ""
+        if mode == "image":
+            image = await self._render("ai.html", ADV.plan_ctx(
+                plan, self._session_label(session_id), nick or uid, ai_text))
+        if image:
+            yield self._build_result(event, "", image)
+        else:
+            yield self._build_result(event, text)
+
     async def _cmd_ai(self, event, tokens, platform, session_id, uid, nick):
+
         if not self.cfg.get("ai_skill_enable", True):
             yield self._build_result(event, "AI 技能已关闭，可在配置里开启。")
             return
@@ -1976,6 +2019,10 @@ class BeautifulBookkeeping(Star):
         except Exception:
             pass
         logger.info("[记账] 插件已卸载")
+
+
+
+
 
 
 

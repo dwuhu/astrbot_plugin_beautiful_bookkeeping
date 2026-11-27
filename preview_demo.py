@@ -268,10 +268,41 @@ async def main():
     })
     print("advice ->", p6)
 
+    # ---------- 省钱建议（下月方案） ----------
+    from core import advisor as ADV
+
+    demo_plan = {
+        "has_data": True, "month": "2026-10", "prev_month": "2026-09",
+        "target_month": "2026-11", "total": 2636.90, "prev_total": 2508.40, "diff": 128.50,
+        "rows": [
+            {"category": "房租", "amount": 1200.0, "percent": 45.5, "rigid": True, "cut": 0.0},
+            {"category": "餐饮", "amount": 620.0, "percent": 23.5, "rigid": False, "cut": 155.0},
+            {"category": "购物", "amount": 420.0, "percent": 15.9, "rigid": False, "cut": 105.0},
+            {"category": "娱乐", "amount": 230.0, "percent": 8.7, "rigid": False, "cut": 34.5},
+            {"category": "交通", "amount": 166.9, "percent": 6.3, "rigid": False, "cut": 0.0},
+        ],
+        "picks": [
+            {"category": "餐饮", "amount": 620.0, "percent": 23.5, "cut": 155.0,
+             "how": "每周固定 2 天自己做饭，外卖单次控制在 25 元内"},
+            {"category": "购物", "amount": 420.0, "percent": 15.9, "cut": 105.0,
+             "how": "非必需品先放 48 小时冷静期，过两天还想要再买"},
+            {"category": "娱乐", "amount": 230.0, "percent": 8.7, "cut": 34.5,
+             "how": "合并视频会员，聚会改成一月 1~2 次"},
+        ],
+        "save": 294.5, "target_budget": 2342.4, "save_percent": 11.2,
+    }
+    p8 = await renderer.render("ai.html", ADV.plan_ctx(
+        demo_plan, "群聊 · 88888888", "小豆",
+        "上月比上上月多花了 128.50 元，主要涨在餐饮和购物。餐饮每周挑两天自己做饭、外卖单次控制在 25 元内，"
+        "购物先把非必需品放两天冷静期，这两项就能省 260 元；娱乐的会员合并一下再省 34.5 元。"
+        "这样下月控制在 2342.40 元以内，比上月少花约 11%。"))
+    print("saving ->", p8)
+
     # 固定文件名，方便 README 和交付引用
     import shutil
     for src, dst in ((p1, "report.png"), (p2, "alert.png"), (p3, "digest.png"),
-                     (p4, "ai.png"), (p5, "goal.png"), (p6, "advice.png")):
+                     (p4, "ai.png"), (p5, "goal.png"), (p6, "advice.png"),
+                     (p8, "saving.png")):
         try:
             shutil.copyfile(src, os.path.join(OUT, dst))
         except Exception as e:
@@ -291,6 +322,7 @@ async def main():
 
 
 asyncio.run(main())
+
 
 
 

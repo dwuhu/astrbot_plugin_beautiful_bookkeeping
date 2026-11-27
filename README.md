@@ -1,4 +1,4 @@
-# 精美记账 · AstrBot 插件 v1.0.1
+# 精美记账 · AstrBot 插件 v1.0.2
 
 [![Release](https://img.shields.io/github/v/release/dwuhu/astrbot_plugin_beautiful_bookkeeping?label=release)](https://github.com/dwuhu/astrbot_plugin_beautiful_bookkeeping/releases)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](./LICENSE)
@@ -11,7 +11,7 @@
 
 > 核心原则：**所有账目只能由用户手动录入**，机器人不会、也不能自动抓取任何支付账单；**数字全部由程序算，AI 只负责解读和建议**，永远不改数据。
 
-这是面向开源发布的**首个正式版本**（当前 **v1.0.1**）：记账 / 查账 / 改删 / 预算与梯度提醒 / 存钱目标与购买力测算 / 每日简报 / 收支对比图 / 账单截图导入 / 每日扣款 / AI 技能中心 / 面板 8 页签，全部收在这一版里。v1.0.1 相对 v1.0.0 只修了数据持久化位置（按插件审核要求改到 `data/plugin_data/<插件名>`）。逐条变更见 [`CHANGELOG.md`](./CHANGELOG.md)，GitHub Release 文案见 [`RELEASE_NOTES.md`](./RELEASE_NOTES.md)。
+这是面向开源发布的**首个正式版本**（当前 **v1.0.2**）：记账 / 查账 / 改删 / 预算与梯度提醒 / 存钱目标与购买力测算 / 每日简报 / 收支对比图 / 账单截图导入 / 每日扣款 / AI 技能中心 / **省钱建议** / 面板 8 页签，全部收在这一版里。v1.0.1 按插件审核要求把数据改到 `data/plugin_data/<插件名>`；v1.0.2 新增「记账 省钱建议」，读上月支出、点名可压缩的分类并给出下月目标预算。逐条变更见 [`CHANGELOG.md`](./CHANGELOG.md)，GitHub Release 文案见 [`RELEASE_NOTES.md`](./RELEASE_NOTES.md)。
 
 ---
 
@@ -48,10 +48,11 @@
 | `docs/screenshots/ai.jpg` | AI 消费分析：分段解读 + 三指标 + 分类条形 |
 | `docs/screenshots/goal.jpg` | 存钱目标卡：进度环（按节奏变色）+ 目标/已存/还差 三块 + 灯带 + 日均建议 + AI 建议 |
 | `docs/screenshots/advice.jpg` | 购买力测算卡：结论大字 + 可动用/买完剩/安全垫三块 + 依据 + 怎么做 + AI 解读 |
+| `docs/screenshots/saving.jpg` | **下月省钱建议卡**：上月支出 / 可省空间 / 下月目标三指标 + 逐类怎么省 + 分类占比条 |
 | `docs/screenshots/trend_today.jpg` | **今收支图卡**：今日收/支/结余三 KPI + 近 7 天双色柱（柱下标注收 / 支金额）+ 今日支出结构 + 与昨天对比一句话 |
 | `docs/screenshots/trend_month.jpg` | **月收支图卡**：本月三 KPI + 近 6 个月双色柱 + 本月支出结构 + 与上月对比 |
 | `docs/screenshots/trend_year.jpg` | **年收支图卡**：今年三 KPI + 近 5 年双色柱 + 今年支出结构 + 与去年对比 |
-| `docs/screenshots/help.jpg` `help2.png` `help3.png` | 图文指令手册 3 页：12 类 58 条分 3 张，每张一屏可读，二次元夜景底图 + 纯白字 + 红色点缀 |
+| `docs/screenshots/help.jpg` `help2.jpg` `help3.jpg` | 图文指令手册 3 页：12 类 59 条分 3 张，每张一屏可读，二次元夜景底图 + 纯白字 + 红色点缀 |
 
 面板页面（AstrBot → 插件 → 精美记账 → 记账本）：
 
@@ -177,7 +178,7 @@ AstrBot WebUI → **插件** → 找到「精美记账」→ 点进插件详情�
 
 ```
 # 帮助
-记账 帮助              （文字版，12 类 58 条）
+记账 帮助              （文字版，12 类 59 条）
 记账 帮助 图片          （图文版，分 3 张卡片，按顺序看）
 
 # 记账
@@ -249,6 +250,10 @@ AstrBot WebUI → **插件** → 找到「精美记账」→ 点进插件详情�
 # 购买力测算（要不要买）
 记账 能买吗 4800 相机
 记账 买得起吗 / 买不买 / 购买力 / 值得买吗      （同一能力的不同叫法）
+
+# 省钱建议（读上月支出，给下月方案）
+记账 省钱建议 / 下月建议 / 支出建议
+记账 省钱建议 图片                          （出 AI 分析卡样式，指标换成可省空间 / 下月目标）
 
 # AI
 记账 AI 帮我分析本月消费
@@ -371,11 +376,11 @@ AstrBot WebUI → **插件** → 找到「精美记账」→ 点进插件详情�
 - 月度预算主动提醒：默认 70 / 90 / 100 三档，聊天指令可改档位与频率（每次 / 每月一次 / 只一次），可整体关闭
 - 本月卡片内置「上月对比复盘」面板（数字程序算，AI 只写建议，当天缓存）
 - 每日简报：开关、自定义时间、天气、预算进度、可选 AI 一句话小结
-- AI：消费分析、口语记账（需确认）、预算建议、上月复盘
+- AI：消费分析、口语记账（需确认）、预算建议、上月复盘、**省钱建议**（上月分类 → 可压缩项 → 下月目标预算，刚性支出自动跳过）
 - 框架内嵌记账页面：总览 / 流水 / 预算 / 存钱目标 / 推送与城市 / 分类 / AI / ⚙设置 八个页签，改删、调预算、改提醒设置、改分类、CSV 导出都在页面里做完
 - 存钱目标：多目标共存、起点已存、截止日、进度环 / 灯带、按近 30 天速度推算达成日、25/50/75/100% 里程碑播报
 - 购买力测算：三档结论 + 三块关键数字 + 依据 / 怎么做，聊天里一条指令、面板里点一下都能算
-- 图文指令手册：`记账 帮助` 文字版（12 类 58 条）、`记账 帮助 图片` 三张玻璃卡片分页列清，和文字版共用同一份数据不会对不上
+- 图文指令手册：`记账 帮助` 文字版（12 类 59 条）、`记账 帮助 图片` 三张玻璃卡片分页列清，和文字版共用同一份数据不会对不上
 - 每日扣款：每本账可设一条「每天 0 点自动记一笔固定支出」，金额 / 分类 / 备注都能改，开关 / 删除随手可做；静默执行不推送，跨天离线只补当天一笔，面板「⚙ 设置」页可直接改
 - 存钱计划：按目标倒推每天 / 每周 / 每月要存多少，差多少速度也会点出来
 - 每日简报升级成「每日报账」：天气 + 今日收入 / 支出 / 结余 + 预算进度 + 目标进度 + 明细 + AI 小结
@@ -465,20 +470,20 @@ AI 只在这三个数字之上补一句人话，不会改动结论。
 ```bash
 # 在项目根目录（有 README.md / main.py 的那一层）
 git push -u origin main
-git push origin v1.0.1
+git push origin v1.0.2
 ```
 
 改版本号时同步这 5 处，别漏：
 
 | 位置 | 字段 |
 |---|---|
-| `metadata.yaml` | `version: v1.0.1` |
-| `main.py` | `@register(...)` 第 4 个参数 `"1.0.1"` |
-| `views/bookkeeping/app.js` | `SET_STATS` 里的 `["版本", "v1.0.1"]` |
-| `README.md` | 标题 `v1.0.1` |
+| `metadata.yaml` | `version: v1.0.2` |
+| `main.py` | `@register(...)` 第 4 个参数 `"1.0.2"` |
+| `views/bookkeeping/app.js` | `SET_STATS` 里的 `["版本", "v1.0.2"]` |
+| `README.md` | 标题 `v1.0.2` |
 | `CHANGELOG.md` | 新增一节，并把 `RELEASE_NOTES.md` 标题一起改 |
 
-打包用 `python dev/pack_release.py`，会在项目根目录生成同名 zip 并复制到桌面；GitHub Release 的 tag 填 `v1.0.1`，正文复制 `RELEASE_NOTES.md`，附件上传这个 zip。
+打包用 `python dev/pack_release.py`，会在项目根目录生成同名 zip 并复制到桌面；GitHub Release 的 tag 填 `v1.0.2`，正文复制 `RELEASE_NOTES.md`，附件上传这个 zip。
 
 
 
